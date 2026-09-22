@@ -1,0 +1,32 @@
+[
+  {
+    "prompt": "Change the STANDARD exception alert to mention a weather delay.",
+    "expected_program": "STANDARD",
+    "expected_carrier_status": "EXCEPTION",
+    "expected_alert_patch": "ALT-002"
+  },
+  {
+    "prompt": "For GSP outbound leg2, update the message to say it is on the way to the global hub.",
+    "expected_program": "GSP",
+    "expected_carrier_status": "IN_TRANSIT",
+    "expected_message_patch": "MSG-102"
+  },
+  {
+    "prompt": "Update the AG inbound delivered message. It should say that the item has been delivered to the authentication center.",
+    "expected_program": "AG",
+    "expected_carrier_status": "DELIVERED",
+    "expected_message_patch": "MSG-101"
+  },
+  {
+    "prompt": "Set the alert for Authenticity Guarantee inbound delivered to indicate that action is required to review results.",
+    "expected_program": "AG",
+    "expected_carrier_status": "DELIVERED",
+    "expected_alert_patch": "ALT-001"
+  },
+  {
+    "prompt": "Standard shipment hit an exception on Leg 1. Make the message say there is a delay in shipping the item.",
+    "expected_program": "STANDARD",
+    "expected_carrier_status": "EXCEPTION",
+    "expected_message_patch": "MSG-103"
+  }
+]

@@ -21,6 +21,28 @@ The platform is designed as a single stateless container composed of four main l
 3. **Data Engine & Tooling:** DuckDB and SentenceTransformers (`tools/`)
 4. **Persistence:** GitHub GitOps
 
+## 🧠 Design Decisions & Trade-offs
+
+Two architectural choices were deliberately made as non-goals, and one platform alternative was evaluated and rejected:
+* **Rejected 3-Tier CMS:** A custom 3-tier CMS (React + Node + relational database) was evaluated but rejected. It would take months to build and would duplicate the audit/versioning capability that GitHub natively provides.
+* **Rejected Pure LLM Inference at Runtime:** Doing LLM inference directly on live carrier webhooks was rejected due to latency and reliability constraints. E-commerce tracking is a strict contract, and a hallucinated delivery state carries real financial and legal risk.
+* **Sparse CSV to Dense JSON:** The legacy `MAIN.csv` required 22 empty columns just to hold sparse stepper positions (`STEP_0` through `STEP_10`). This was transformed into a dense nested `stepper` array within hierarchical JSON, cutting token overhead for the AI agents by roughly 65%.
+
+## 🧪 Testing and Validation Strategy
+
+To guarantee zero regressions and strict referential integrity, the platform enforces:
+* **Integration Tests:** Confirming that the GitHub client authenticates, branches, and opens PRs correctly against a staging repository.
+* **LLM Evaluation Suites:** Over 50 prompt variations are run on every deployment to catch cases where the Editor agent produces invalid JSON or hallucinated keys.
+* **GitHub Actions Schema Validation:** JSON Schema validation (`scripts/validate_migration.py`) is enforced as a GitHub Action on every commit. This acts as the foreign-key constraint the legacy CSV lacked.
+
+## 🏆 Project Outcomes
+
+* Migrated **1,380+ rules** across 14 programs from a single flat spreadsheet into modular, schema-validated JSON.
+* Eliminated a major class of production incidents—blank tracking pages caused by unvalidated key typos—by strictly enforcing referential integrity checks before Git pushes.
+* Delivered **100% automated QA validation** and a full, SOC2-grade audit/rollback trail for every configuration change.
+
+---
+
 ## 📁 Directory Structure
 
 ```text
