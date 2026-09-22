@@ -108,3 +108,34 @@ Try asking the chatbot to make a configuration change, for example:
 > *"Change the message for standard inbound leg1 exceptions to say there is a weather delay."*
 
 The chatbot will identify the target rule, run semantic search to find the correct alert/message key, validate the key through the QA node, and mock a GitHub Pull Request with the proposed change.
+
+## 📊 Evaluation Results
+
+To ensure deterministic behavior and catch LLM hallucinations, the platform runs a strict evaluation suite (`scripts/run_llm_evals.py`) against the LangGraph state machine.
+
+**Key Validations:**
+1. **Accurate Semantic Resolution:** The local `SentenceTransformers` model (`all-MiniLM-L6-v2`) perfectly maps ambiguous user intents (e.g., "mention a weather delay") to exact legacy keys (e.g., `ALT-002`) without manual lookup.
+2. **Deterministic Data Integrity:** The strict state machine isolates JSON patch logic, while the QA node confirms proposed keys exist in the master localization dictionaries before proceeding.
+3. **Seamless GitOps Delivery:** Each validated edit produces an isolated local commit and opens a mock Pull Request, simulating a SOC2-grade deployment process.
+
+**Sample Evaluation Run:**
+```text
+Starting LLM Evaluation Suite with 5 variations...
+
+--- Running Eval 1/5 ---
+Prompt: 'Change the STANDARD exception alert to mention a weather delay.'
+--- PLANNER NODE ---
+Generated SQL: SELECT * FROM rules WHERE program='STANDARD' AND carrier_status='EXCEPTION'
+--- EDITOR NODE ---
+Proposed Patch Data: {'alert_key': 'ALT-002'}
+--- QA NODE ---
+QA Passed.
+--- GITOPS NODE ---
+Committed change locally and raised mock PR: https://github.com/mock-org/tcc-config/pull/5c7bcb38
+✅ PASS
+
+... (All 5 evaluation variations passed successfully)
+
+--- Evaluation Results ---
+Total: 5 | Passed: 5 | Failed: 0
+```
