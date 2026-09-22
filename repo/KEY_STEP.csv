@@ -1,0 +1,5 @@
+KEY,TEXT
+STEP-01,Order Placed
+STEP-02,Shipped
+STEP-03,Delivered
+STEP-EX,Delayed

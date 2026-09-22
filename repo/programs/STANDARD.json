@@ -1,0 +1,18 @@
+{
+  "program": "STANDARD",
+  "rules": [
+    {
+      "perspective": "BUYER",
+      "direction": "INBOUND",
+      "leg": "LEG1",
+      "carrier_status": "EXCEPTION",
+      "message_key": "MSG-103",
+      "alert_key": "ALT-002",
+      "stepper": [
+        "STEP-01",
+        "STEP-02",
+        "STEP-EX"
+      ]
+    }
+  ]
+}

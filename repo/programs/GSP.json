@@ -1,0 +1,17 @@
+{
+  "program": "GSP",
+  "rules": [
+    {
+      "perspective": "SELLER",
+      "direction": "OUTBOUND",
+      "leg": "LEG2",
+      "carrier_status": "IN_TRANSIT",
+      "message_key": "MSG-102",
+      "alert_key": "",
+      "stepper": [
+        "STEP-01",
+        "STEP-02"
+      ]
+    }
+  ]
+}

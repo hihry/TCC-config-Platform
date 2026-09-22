@@ -1,0 +1,18 @@
+{
+  "program": "AG",
+  "rules": [
+    {
+      "perspective": "BUYER",
+      "direction": "INBOUND",
+      "leg": "LEG1",
+      "carrier_status": "DELIVERED",
+      "message_key": "MSG-101",
+      "alert_key": "ALT-001",
+      "stepper": [
+        "STEP-01",
+        "STEP-02",
+        "STEP-03"
+      ]
+    }
+  ]
+}

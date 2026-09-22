@@ -1,0 +1,5 @@
+KEY,TEXT
+MSG-101,Your item has been delivered to the authentication center.
+MSG-102,Your item is on the way to the global shipping hub.
+MSG-103,There is a delay in shipping your item.
+MSG-999,A test message.
