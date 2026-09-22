@@ -1,8 +1,6 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 from typing import Optional
 from tools.localization_editor import semantic_search
@@ -21,40 +19,42 @@ def run_editor(state):
     if not target_rule:
         return {"status": "Editor skipped, no target rule."}
         
-    llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0)
-    structured_llm = llm.with_structured_output(EditorOutput)
+    # MOCK LLM LOGIC: Map request text to semantic intents
+    req_lower = request.lower()
+    new_message_intent = None
+    new_alert_intent = None
     
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are an AI configuration editor. Your job is to decide which fields to patch based on the user request. \nTarget Rule: {target_rule}\nPrevious QA Errors (if any): {errors}"),
-        ("user", "Request: {request}")
-    ])
+    if "weather" in req_lower:
+        new_alert_intent = "Shipping delayed due to weather."
+    elif "global hub" in req_lower:
+        new_message_intent = "Your item is on the way to the global shipping hub."
+    elif "authentication center" in req_lower:
+        new_message_intent = "Your item has been delivered to the authentication center."
+    elif "action is required" in req_lower:
+        new_alert_intent = "Action required: review authentication results."
+    elif "delay in shipping" in req_lower:
+        new_message_intent = "There is a delay in shipping your item."
+        
+    thought = "MOCK: Identified patch intents from request."
     
-    chain = prompt | structured_llm
+    patch_data = {}
     
+    # Apply semantic search to find exact keys (Testing real sentence-transformers!)
     try:
-        response = chain.invoke({
-            "target_rule": target_rule,
-            "request": request,
-            "errors": validation_errors
-        })
-        
-        patch_data = {}
-        
-        # Apply semantic search to find exact keys
-        if response.new_message_intent:
-            matches = semantic_search(response.new_message_intent, "MESSAGE", top_k=1)
+        if new_message_intent:
+            matches = semantic_search(new_message_intent, "MESSAGE", top_k=1)
             if matches:
                 patch_data["message_key"] = matches[0]["key"]
                 
-        if response.new_alert_intent:
-            matches = semantic_search(response.new_alert_intent, "ALERT", top_k=1)
+        if new_alert_intent:
+            matches = semantic_search(new_alert_intent, "ALERT", top_k=1)
             if matches:
                 patch_data["alert_key"] = matches[0]["key"]
                 
         print(f"Proposed Patch Data: {patch_data}")
         return {
             "patch_data": patch_data,
-            "editor_thought": response.thought,
+            "editor_thought": thought,
             "status": "Editor proposed patch."
         }
     except Exception as e:
