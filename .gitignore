@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment variables / Secrets
+.env
+.env.local
+.env.*
+
+# IDE / Editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Databases (We use in-memory DuckDB, but just in case)
+*.duckdb
+*.db
+*.sqlite
+*.sqlite3
+
+# HuggingFace / Model caches
+.cache/
+huggingface/
+
+# Streamlit specific
+.streamlit/secrets.toml
